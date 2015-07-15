@@ -5,10 +5,119 @@
   'use strict';
 
   var example1 = function(){
-    var q = new QueueRunner();
-  }; 
+    
+    var queueRunner1 = new QueueRunner();
+    var fn = function( count, fn, queueRunner1, dbug ){
+
+      var timeDelay = parseInt( Math.random() * 1000 * 2 );
+
+      console.groupCollapsed('Example1');
+
+      dbug.time( 'Example 1, time diff from last ran function in queue: ' );
+      console.log( 'Example 1', 
+        '\n',
+        'count is: ', count, 
+        '\n',
+        'timeDelay before next function is ran: ', timeDelay, 'ms' 
+      );
+      
+      count++;
+
+      var dbug = new Dbug();
+      dbug.time( 'Example 1, time diff from last ran function in queue: ' );
+
+      console.groupEnd('Example1');
+
+      var itemOptions = {
+        fn: fn,
+        args: [ count, fn, queueRunner1, dbug ],
+        runOnComplete: false,
+        waitForEndOfStack: false,
+        timeDelay: timeDelay
+      };
+      
+      if ( count <= 10 ) {
+        queueRunner1.queue.push( new queueRunner1.makeQueueItem( itemOptions ) );
+      };
+
+      // continue the next item on the queue
+      queueRunner1.continueQueue();
+    };
+    var count = 0;
+    var dbug = new Dbug();
+    var itemOptions = {
+      fn: fn,
+      args: [ count, fn, queueRunner1, dbug ],
+      runOnComplete: false,
+      waitForEndOfStack: false,
+      timeDelay: 800
+    };
+
+    dbug.time( 'Example 1, time diff from last ran function in queue: ' );
+
+    queueRunner1.queue.push( new queueRunner1.makeQueueItem( itemOptions ) );
+    queueRunner1.run();
+  };
 
   example1();
+  // --------------------------------------------------------
+  
+  var example2 = function(){
+    
+    var queueRunner2 = new QueueRunner();
+    var fn = function( count, fn, queueRunner2, dbug ){
+
+      var timeDelay = parseInt( Math.random() * 1000 * 2 );
+
+      console.groupCollapsed('Example2');
+
+      dbug.time( 'Example 2, time diff from last ran function in queue: ' );
+      console.log( 'Example 2', 
+        '\n',
+        'count is: ', count, 
+        '\n',
+        'timeDelay before next function is ran: ', timeDelay, 'ms' 
+      );
+      
+      count++;
+
+      var dbug = new Dbug();
+      dbug.time( 'Example 2, time diff from last ran function in queue: ' );
+
+      console.groupEnd('Example2');
+
+      var itemOptions = {
+        fn: fn,
+        args: [ count, fn, queueRunner2, dbug ],
+        runOnComplete: false,
+        waitForEndOfStack: false,
+        timeDelay: timeDelay
+      };
+      
+      if ( count <= 10 ) {
+        queueRunner2.queue.push( new queueRunner2.makeQueueItem( itemOptions ) );
+      };
+
+      // continue the next item on the queue
+      queueRunner2.continueQueue();
+    };
+    var count = 0;
+    var dbug = new Dbug();
+    var itemOptions = {
+      fn: fn,
+      args: [ count, fn, queueRunner2, dbug ],
+      runOnComplete: false,
+      waitForEndOfStack: false,
+      timeDelay: 800
+    };
+
+    dbug.time( 'Example 2, time diff from last ran function in queue: ' );
+
+    queueRunner2.queue.push( new queueRunner2.makeQueueItem( itemOptions ) );
+    queueRunner2.run();
+  };
+
+  example2();
 
 })(window);
 
