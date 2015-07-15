@@ -10,6 +10,17 @@
     <script src="bower_components/mocha/mocha.js"></script>
     <script src="bower_components/chai/chai.js"></script>
 
+    <script src="bower_components/requirejs/require.js"></script>
+    <script>
+        require([
+                'bower_components/sinon/lib/sinon',
+                'bower_components/sinon-chai/lib/sinon-chai'
+            ], function(sinon, sinonChai){
+            chai.use(sinonChai);
+            window.sinonChai = sinonChai;
+        });
+    </script>
+
     <script>
         mocha.setup('bdd');
     </script>

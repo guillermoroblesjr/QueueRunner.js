@@ -4,7 +4,9 @@
   "dependencies": {
     "modernizr": "~2.8.2",
     "foundation": "~5.5.1",
-    "Dbug.js": "https://github.com/guillermoroblesjr/Dbug.js.git#v0.2-alpha"
+    "Dbug.js": "https://github.com/guillermoroblesjr/Dbug.js.git#v0.2-alpha",
+    "sinon-chai": "2.8.0",
+    "sinon": "1.15.4"
   },
   "devDependencies": {
     "mocha": "~2.1.0",

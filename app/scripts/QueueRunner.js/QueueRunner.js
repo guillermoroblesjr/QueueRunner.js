@@ -1,10 +1,14 @@
 // https://github.com/guillermoroblesjr/QueueRunner.js
-var QueueRunner = function(){
-  'use strict';
-  this.queue = [
-    // { fn: function(){}, args: [], runOnComplete: false }
-  ];
-  this.MakeQueueItem = function( itemOptions ){
+(function(window, undefined){
+
+  var QueueRunner = function(){
+    'use strict';
+    this.queue = [
+      // { fn: function(){}, args: [], runOnComplete: false }
+    ];
+  };
+
+  QueueRunner.prototype.MakeQueueItem = function( itemOptions ){
     this.fn = itemOptions.fn || function(){ 
       console.error('All queue item objects created with makeQueueItem(), need a function for the "fn" key!', 
         '\n',
@@ -19,7 +23,7 @@ var QueueRunner = function(){
     this.timeDelay = itemOptions.timeDelay || undefined;
     return this;
   };
-  this.run = function(){
+  QueueRunner.prototype.run = function(){
     var self = this;
     // stop if the queue is zero
     if ( this.queue.length === 0 ) { 
@@ -58,12 +62,16 @@ var QueueRunner = function(){
       this.run();
     };
   };
-  this.continueQueue = function(){
-    this.run();
-  };
-  this.delay = function( func, wait, args ){
+  QueueRunner.prototype.continueQueue = QueueRunner.prototype.run;
+  QueueRunner.prototype.delay = function( func, wait, args ){
     args = args || [];
     wait = wait || 1;
     return setTimeout(function() { func.apply(undefined, args); }, wait);
   };
-};
+
+  // attach to the window
+  window.QueueRunner = QueueRunner;
+
+  return QueueRunner;
+
+})(window);
