@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for ./app/scripts/QueueRunner.js/QueueRunner.js</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../../../prettify.css">
+    <link rel="stylesheet" href="../../../base.css">
+    <style type='text/css'>
+        div.coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">./app/scripts/QueueRunner.js/QueueRunner.js</span></h1>
+    <h2>
+        Statements: <span class="metric">17.65% <small>(6 / 34)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Branches: <span class="metric">0% <small>(0 / 26)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Functions: <span class="metric">11.11% <small>(1 / 9)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Lines: <span class="metric">18.18% <small>(6 / 33)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../../../index.html">All files</a> &#187; <a href="index.html">./app/scripts/QueueRunner.js/</a> &#187; QueueRunner.js</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// https://github.com/guillermoroblesjr/QueueRunner.js
+var QueueRunner = function(){
+  'use strict';
+  this.queue = [
+    // { fn: function(){}, args: [], runOnComplete: false }
+  ];
+  this.makeQueueItem = <span class="fstat-no" title="function not covered" >function( itemOptions ){</span>
+<span class="cstat-no" title="statement not covered" >    this.fn = itemOptions.fn || <span class="fstat-no" title="function not covered" >function(){ </span></span>
+<span class="cstat-no" title="statement not covered" >      console.error('All queue item objects created with makeQueueItem(), need a function for the "fn" key!', </span>
+        '\n',
+        'The current instance running is: ', this,
+        '\n',
+        'Arguments passed in are: ', arguments
+      );
+    };
+<span class="cstat-no" title="statement not covered" >    this.args = itemOptions.args || [];</span>
+<span class="cstat-no" title="statement not covered" >    this.runOnComplete = itemOptions.runOnComplete || false;</span>
+<span class="cstat-no" title="statement not covered" >    this.waitForEndOfStack = itemOptions.waitForEndOfStack || false;</span>
+<span class="cstat-no" title="statement not covered" >    this.timeDelay = itemOptions.timeDelay || undefined;</span>
+<span class="cstat-no" title="statement not covered" >    return this;</span>
+  };
+  this.run = <span class="fstat-no" title="function not covered" >function(){</span>
+<span class="cstat-no" title="statement not covered" >    var self = this;</span>
+    // stop if the queue is zero
+<span class="cstat-no" title="statement not covered" >    if ( this.queue.length === 0 ) { </span>
+<span class="cstat-no" title="statement not covered" >      console.log('the queue length is: ', this.queue.length);</span>
+<span class="cstat-no" title="statement not covered" >      return; </span>
+    };
+    // remove the first item in the queue
+<span class="cstat-no" title="statement not covered" >    var item = this.queue.shift();</span>
+    
+<span class="cstat-no" title="statement not covered" >    if ( item.waitForEndOfStack === true &amp;&amp; item.timeDelay !== undefined ) {</span>
+      // run function at end of stack and after a time delay
+<span class="cstat-no" title="statement not covered" >      this.delay( <span class="fstat-no" title="function not covered" >function( args ){</span></span>
+        
+<span class="cstat-no" title="statement not covered" >        self.delay( <span class="fstat-no" title="function not covered" >function( args ){</span></span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >          item.fn.apply( self, item.args );</span>
+&nbsp;
+        }, item.timeDelay, item.args)
+&nbsp;
+      }, 1, item.args );
+    }
+    else <span class="cstat-no" title="statement not covered" >if ( item.waitForEndOfStack === true ){</span>
+      // run function at end of stack
+<span class="cstat-no" title="statement not covered" >      this.delay( item.fn, 1, item.args );</span>
+    }
+    else <span class="cstat-no" title="statement not covered" >if ( item.timeDelay !== undefined ){</span>
+      // run function at end of timeDelay
+<span class="cstat-no" title="statement not covered" >      this.delay( item.fn, item.timeDelay, item.args );</span>
+    }
+    else {
+      // run the function
+<span class="cstat-no" title="statement not covered" >      item.fn.apply( this, item.args );</span>
+    }
+    // continue running on queue if user requested
+<span class="cstat-no" title="statement not covered" >    if ( item.runOnComplete === true ) {</span>
+<span class="cstat-no" title="statement not covered" >      this.run();</span>
+    };
+  };
+  this.continueQueue = <span class="fstat-no" title="function not covered" >function(){</span>
+<span class="cstat-no" title="statement not covered" >    this.run();</span>
+  };
+  this.delay = <span class="fstat-no" title="function not covered" >function( func, wait, args ){</span>
+<span class="cstat-no" title="statement not covered" >    args = args || [];</span>
+<span class="cstat-no" title="statement not covered" >    wait = wait || 1;</span>
+<span class="cstat-no" title="statement not covered" >    return setTimeout(<span class="fstat-no" title="function not covered" >function() {</span> <span class="cstat-no" title="statement not covered" >func.apply(undefined, args); </span>}, wait);</span>
+  };
+};</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Jul 15 2015 11:06:04 GMT-0500 (Central Daylight Time)</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>
