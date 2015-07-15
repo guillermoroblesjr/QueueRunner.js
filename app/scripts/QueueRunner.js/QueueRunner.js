@@ -4,7 +4,7 @@ var QueueRunner = function(){
   this.queue = [
     // { fn: function(){}, args: [], runOnComplete: false }
   ];
-  this.makeQueueItem = function( itemOptions ){
+  this.MakeQueueItem = function( itemOptions ){
     this.fn = itemOptions.fn || function(){ 
       console.error('All queue item objects created with makeQueueItem(), need a function for the "fn" key!', 
         '\n',
