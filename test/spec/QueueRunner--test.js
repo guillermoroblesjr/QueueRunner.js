@@ -89,6 +89,138 @@
       });
     });
 
+    describe("user options", function(){
+
+      it("should write an error to the console", function(){
+
+        var q = new QueueRunner();
+
+        // mock console.error
+        var c = {
+          error: function(){
+            return true;
+          }
+        };
+        q.MakeQueueItem = function( itemOptions ){
+          this.fn = itemOptions.fn || function(){ 
+            return c.error('All queue item objects created with makeQueueItem(), need a function for the "fn" key!', 
+              '\n',
+              'The current instance running is: ', this,
+              '\n',
+              'Arguments passed in are: ', arguments
+            );
+          };
+          this.args = itemOptions.args || [];
+          this.runOnComplete = itemOptions.runOnComplete || false;
+          this.waitForEndOfStack = itemOptions.waitForEndOfStack || false;
+          this.timeDelay = itemOptions.timeDelay || undefined;
+          return this;
+        };
+
+        var queueItem = new q.MakeQueueItem( {} );
+        var fn = queueItem.fn.apply( q, queueItem.args );
+        expect(fn).to.equal(true);
+
+        q.run();
+      });
+
+      it("run function at end of stack and after a time delay", function(){
+
+        var q = new QueueRunner();
+        var queueItemOptions = {
+          fn: function(){},
+          args: [ q ],
+          runOnComplete: false,
+          waitForEndOfStack: true,
+          timeDelay: 1
+        };
+
+        var queueItem = new q.MakeQueueItem( queueItemOptions );
+        q.queue.push( queueItem );
+        q.run();
+
+        expect(q.queue.length).to.equal(0);
+      });
+
+      it("run function at end of stack", function(){
+
+        var q = new QueueRunner();
+        var queueItemOptions = {
+          fn: function(){},
+          args: [ q ],
+          runOnComplete: false,
+          waitForEndOfStack: true
+        };
+
+        var queueItem = new q.MakeQueueItem( queueItemOptions );
+        q.queue.push( queueItem );
+        q.run();
+
+        expect(q.queue.length).to.equal(0);
+      });
+
+      it("run function with a time delay", function(){
+
+        var q = new QueueRunner();
+        var queueItemOptions = {
+          fn: function(){},
+          args: [ q ],
+          timeDelay: 100
+        };
+
+        var queueItem = new q.MakeQueueItem( queueItemOptions );
+        q.queue.push( queueItem );
+        q.run();
+
+        expect(q.queue.length).to.equal(0);
+      });
+
+      it("run function with only a fn", function(){
+
+        var q = new QueueRunner();
+        var queueItemOptions = {
+          fn: function(){}
+        };
+
+        var queueItem = new q.MakeQueueItem( queueItemOptions );
+        q.queue.push( queueItem );
+        q.run();
+
+        expect(q.queue.length).to.equal(0);
+      });
+
+      it("run function with only a fn and args", function(){
+
+        var q = new QueueRunner();
+        var queueItemOptions = {
+          fn: function(){},
+          args: []
+        };
+
+        var queueItem = new q.MakeQueueItem( queueItemOptions );
+        q.queue.push( queueItem );
+        q.run();
+
+        expect(q.queue.length).to.equal(0);
+      });
+
+      it("continue running queue if user requested", function(){
+
+        var q = new QueueRunner();
+        var queueItemOptions = {
+          fn: function(){},
+          args: [ q ],
+          runOnComplete: true
+        };
+
+        var queueItem = new q.MakeQueueItem( queueItemOptions );
+        q.queue.push( queueItem );
+        q.run();
+
+        expect(q.queue.length).to.equal(0);
+      });
+    });
+
     describe("implementing the queue runner", function(){
       it("should have an initial queue size of zero", function(){
         var q = new QueueRunner();
@@ -125,137 +257,28 @@
         expect(q.continueQueue).to.equal(q.run);
       });
 
-      describe("user options", function(){
-
-        it("should write an error to the console", function(){
-
+      describe('.timeDelay', function() {
+        it('should run a queue item with a minimum delay of what is specified in the time delay', function(done) {
           var q = new QueueRunner();
-
-          // mock console.error
-          var c = {
-            error: function(){
-              return true;
-            }
-          };
-          q.MakeQueueItem = function( itemOptions ){
-            this.fn = itemOptions.fn || function(){ 
-              return c.error('All queue item objects created with makeQueueItem(), need a function for the "fn" key!', 
-                '\n',
-                'The current instance running is: ', this,
-                '\n',
-                'Arguments passed in are: ', arguments
-              );
-            };
-            this.args = itemOptions.args || [];
-            this.runOnComplete = itemOptions.runOnComplete || false;
-            this.waitForEndOfStack = itemOptions.waitForEndOfStack || false;
-            this.timeDelay = itemOptions.timeDelay || undefined;
-            return this;
-          };
-
-          var queueItem = new q.MakeQueueItem( {} );
-          var fn = queueItem.fn.apply( q, queueItem.args );
-          expect(fn).to.equal(true);
-
-          q.run();
-        });
-
-        it("run function at end of stack and after a time delay", function(){
-
-          var q = new QueueRunner();
+          var timeDelay = parseInt(Math.random() * 1000 * 2);
           var queueItemOptions = {
-            fn: function(){},
-            args: [ q ],
+            fn: function(timeDelay, t1){
+              var t2 = new Date();
+              expect( t2 - t1 ).to.be.at.least( timeDelay );
+              done();
+            },
+            args: [ timeDelay, new Date() ],
             runOnComplete: false,
-            waitForEndOfStack: true,
-            timeDelay: 1
+            waitForEndOfStack: false,
+            timeDelay: timeDelay
           };
 
           var queueItem = new q.MakeQueueItem( queueItemOptions );
           q.queue.push( queueItem );
           q.run();
-
-          expect(q.queue.length).to.equal(0);
-        });
-
-        it("run function at end of stack", function(){
-
-          var q = new QueueRunner();
-          var queueItemOptions = {
-            fn: function(){},
-            args: [ q ],
-            runOnComplete: false,
-            waitForEndOfStack: true
-          };
-
-          var queueItem = new q.MakeQueueItem( queueItemOptions );
-          q.queue.push( queueItem );
-          q.run();
-
-          expect(q.queue.length).to.equal(0);
-        });
-
-        it("run function with a time delay", function(){
-
-          var q = new QueueRunner();
-          var queueItemOptions = {
-            fn: function(){},
-            args: [ q ],
-            timeDelay: 100
-          };
-
-          var queueItem = new q.MakeQueueItem( queueItemOptions );
-          q.queue.push( queueItem );
-          q.run();
-
-          expect(q.queue.length).to.equal(0);
-        });
-
-        it("run function with only a fn", function(){
-
-          var q = new QueueRunner();
-          var queueItemOptions = {
-            fn: function(){}
-          };
-
-          var queueItem = new q.MakeQueueItem( queueItemOptions );
-          q.queue.push( queueItem );
-          q.run();
-
-          expect(q.queue.length).to.equal(0);
-        });
-
-        it("run function with only a fn and args", function(){
-
-          var q = new QueueRunner();
-          var queueItemOptions = {
-            fn: function(){},
-            args: []
-          };
-
-          var queueItem = new q.MakeQueueItem( queueItemOptions );
-          q.queue.push( queueItem );
-          q.run();
-
-          expect(q.queue.length).to.equal(0);
-        });
-
-        it("continue running queue if user requested", function(){
-
-          var q = new QueueRunner();
-          var queueItemOptions = {
-            fn: function(){},
-            args: [ q ],
-            runOnComplete: true
-          };
-
-          var queueItem = new q.MakeQueueItem( queueItemOptions );
-          q.queue.push( queueItem );
-          q.run();
-
-          expect(q.queue.length).to.equal(0);
         });
       });
+
 
       /*
         it("apples", function(){
@@ -277,122 +300,6 @@
         });
       //*/
     });
-
-    /* 
-    describe('creating a class with make()', function(){
-
-      it('should return a function', function(){
-        var SomeClass = Class.make(function SomeClass(){
-        });
-        expect(SomeClass).to.be.a('function');
-      });
-    });
-
-    describe('creating an instance of your new class', function(){
-      
-      describe('-- creating an instance with the "new" operator', function(){
-        it('should be an instance of the class made', function(){
-          var SomeClass = Class.make(function SomeClass(){
-          });
-          var classInstance = new SomeClass();
-          expect(classInstance).to.be.instanceof(SomeClass);
-        });
-      });
-
-      describe('-- creating an instance with Object.create()', function(){
-        it('should be an instance of the class made', function(){
-          var SomeClass = Class.make(function SomeClass(){
-          });
-          var classInstance = Object.create(SomeClass.prototype);
-          expect(classInstance).to.be.instanceof(SomeClass);
-        });
-      });
-
-      describe('-- instantiating with "new"', function(){
-
-        it('should inherit all properties from it\'s constructor', function(){
-          var SomeClass = Class.make(function SomeClass(){
-            this.property1 = true;
-            return this;
-          });
-          var someInstance = new SomeClass();
-          expect(someInstance).to.have.property('property1');
-          expect(someInstance.property1).to.not.be.a('function');
-        });
-
-        it('should inherit all methods from it\'s constructor', function(){
-          var SomeClass = Class.make(function SomeClass(){
-            this.method1 = function(){};
-            return this;
-          });
-          var someInstance = new SomeClass();
-          expect(someInstance).to.have.property('method1');
-          expect(someInstance.method1).to.be.a('function');
-        });
-
-        it('inherits properties which is not it\'s own', function(){
-          var SomeClass = Class.make(function SomeClass(){
-            this.property1 = true;
-            return this;
-          });
-          var someInstance = new SomeClass();
-          expect(someInstance).to.have.property('property1');
-          expect(someInstance).to.not.have.ownProperty('property1');
-        });
-
-        it('inherits methods which is not it\'s own', function(){
-          var SomeClass = Class.make(function SomeClass(){
-            this.method1 = function(){};
-            return this;
-          });
-          var someInstance = new SomeClass();
-          expect(someInstance).to.have.property('method1');
-          expect(someInstance).to.not.have.ownProperty('method1');
-        });
-
-        it('can inherit properties via prototype', function(){
-          var SomeClass = Class.make(function SomeClass(){
-            return this;
-          });
-          SomeClass.prototype.property1 = true;
-          var someInstance = new SomeClass();
-          expect(someInstance).to.have.property('property1');
-          expect(someInstance).to.not.have.ownProperty('property1');
-        });
-
-        it('can inherit methods via prototype', function(){
-          var SomeClass = Class.make(function SomeClass(){
-            return this;
-          });
-          SomeClass.prototype.method1 = function(){};
-          var someInstance = new SomeClass();
-          expect(someInstance).to.have.property('method1');
-          expect(someInstance).to.not.have.ownProperty('method1');
-        });
-
-        it('can inherit properties via prototype after instantiated', function(){
-          var SomeClass = Class.make(function SomeClass(){
-            return this;
-          });
-          var someInstance = new SomeClass();
-          SomeClass.prototype.property1 = true;
-          expect(someInstance).to.have.property('property1');
-          expect(someInstance).to.not.have.ownProperty('property1');
-        });
-
-        it('can inherit methods via prototype after instantiated', function(){
-          var SomeClass = Class.make(function SomeClass(){
-            return this;
-          });
-          var someInstance = new SomeClass();
-          SomeClass.prototype.method1 = function(){};
-          expect(someInstance).to.have.property('method1');
-          expect(someInstance).to.not.have.ownProperty('method1');
-        });
-      });
-    });
-
-    //*/
 
   });
 

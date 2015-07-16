@@ -33,7 +33,7 @@
     var self = this;
     // stop if the queue is zero
     if ( this.queue.length === 0 ) { 
-      console.log('the queue length is: ', this.queue.length);
+      // console.log('the queue length is: ', this.queue.length);
       return; 
     };
     // remove the first item in the queue
