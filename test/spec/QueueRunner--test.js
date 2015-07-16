@@ -44,7 +44,7 @@
       });
     });
 
-    describe("making a queue item with QueueRunner.prototype.MakeQueueItem()", function(){
+    describe("making a queue item with MakeQueueItem()", function(){
       it('should return an object', function(){
         var q = new QueueRunner();
         var queueItem = q.MakeQueueItem({});
@@ -175,6 +175,26 @@
         expect(q.queue.length).to.equal(0);
       });
 
+      it('run a queue item with a minimum delay of what is specified in the time delay', function(done) {
+        var q = new QueueRunner();
+        var timeDelay = parseInt(Math.random() * 1000 * 2);
+        var queueItemOptions = {
+          fn: function(timeDelay, t1){
+            var t2 = new Date();
+            expect( t2 - t1 ).to.be.at.least( timeDelay );
+            done();
+          },
+          args: [ timeDelay, new Date() ],
+          runOnComplete: false,
+          waitForEndOfStack: false,
+          timeDelay: timeDelay
+        };
+
+        var queueItem = new q.MakeQueueItem( queueItemOptions );
+        q.queue.push( queueItem );
+        q.run();
+      });
+
       it("run function with only a fn", function(){
 
         var q = new QueueRunner();
@@ -207,17 +227,29 @@
       it("continue running queue if user requested", function(){
 
         var q = new QueueRunner();
+        var timeDelay = parseInt(Math.random() * 1000 * 2);
         var queueItemOptions = {
-          fn: function(){},
+          fn: function(q){
+          },
           args: [ q ],
-          runOnComplete: true
+          runOnComplete: true,
+          timeDelay: timeDelay
         };
 
         var queueItem = new q.MakeQueueItem( queueItemOptions );
         q.queue.push( queueItem );
-        q.run();
 
-        expect(q.queue.length).to.equal(0);
+        var queueItemOptions2 = {
+          fn: function(q){
+            expect( q.queue.length ).to.equal( 0 );
+            // done();
+          },
+          args: [q]
+        };
+        var queueItem2 = new q.MakeQueueItem( queueItemOptions2 );
+        q.queue.push( queueItem2 );
+
+        q.run();
       });
     });
 
@@ -239,10 +271,16 @@
         };
 
         var queueItem = new q.MakeQueueItem( queueItemOptions );
+        queueItem.id = 1;
         q.queue.push( queueItem );
+
+        queueItem = new q.MakeQueueItem( queueItemOptions );
+        queueItem.id = 2;
+        q.queue.push( queueItem );
+
         q.run();
 
-        expect(q.queue.length).to.equal(0);
+        expect(q.queue[0].id).to.equal(2);
       });
 
       it("should not throw an error if run() is called with no items in the queue ", function(){
@@ -256,30 +294,7 @@
         var q = new QueueRunner();
         expect(q.continueQueue).to.equal(q.run);
       });
-
-      describe('.timeDelay', function() {
-        it('should run a queue item with a minimum delay of what is specified in the time delay', function(done) {
-          var q = new QueueRunner();
-          var timeDelay = parseInt(Math.random() * 1000 * 2);
-          var queueItemOptions = {
-            fn: function(timeDelay, t1){
-              var t2 = new Date();
-              expect( t2 - t1 ).to.be.at.least( timeDelay );
-              done();
-            },
-            args: [ timeDelay, new Date() ],
-            runOnComplete: false,
-            waitForEndOfStack: false,
-            timeDelay: timeDelay
-          };
-
-          var queueItem = new q.MakeQueueItem( queueItemOptions );
-          q.queue.push( queueItem );
-          q.run();
-        });
-      });
-
-
+      
       /*
         it("apples", function(){
 
