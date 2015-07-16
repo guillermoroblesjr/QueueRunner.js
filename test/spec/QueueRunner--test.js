@@ -125,17 +125,137 @@
         expect(q.continueQueue).to.equal(q.run);
       });
 
-      describe("if the queue item does not have a user defined function", function(){
+      describe("user options", function(){
+
         it("should write an error to the console", function(){
 
           var q = new QueueRunner();
-          var queueItem = new q.MakeQueueItem({});
+
+          // mock console.error
+          var c = {
+            error: function(){
+              return true;
+            }
+          };
+          q.MakeQueueItem = function( itemOptions ){
+            this.fn = itemOptions.fn || function(){ 
+              return c.error('All queue item objects created with makeQueueItem(), need a function for the "fn" key!', 
+                '\n',
+                'The current instance running is: ', this,
+                '\n',
+                'Arguments passed in are: ', arguments
+              );
+            };
+            this.args = itemOptions.args || [];
+            this.runOnComplete = itemOptions.runOnComplete || false;
+            this.waitForEndOfStack = itemOptions.waitForEndOfStack || false;
+            this.timeDelay = itemOptions.timeDelay || undefined;
+            return this;
+          };
+
+          var queueItem = new q.MakeQueueItem( {} );
+          var fn = queueItem.fn.apply( q, queueItem.args );
+          expect(fn).to.equal(true);
+
+          q.run();
+        });
+
+        it("run function at end of stack and after a time delay", function(){
+
+          var q = new QueueRunner();
+          var queueItemOptions = {
+            fn: function(){},
+            args: [ q ],
+            runOnComplete: false,
+            waitForEndOfStack: true,
+            timeDelay: 1
+          };
+
+          var queueItem = new q.MakeQueueItem( queueItemOptions );
           q.queue.push( queueItem );
+          q.run();
+
+          expect(q.queue.length).to.equal(0);
+        });
+
+        it("run function at end of stack", function(){
+
+          var q = new QueueRunner();
+          var queueItemOptions = {
+            fn: function(){},
+            args: [ q ],
+            runOnComplete: false,
+            waitForEndOfStack: true
+          };
+
+          var queueItem = new q.MakeQueueItem( queueItemOptions );
+          q.queue.push( queueItem );
+          q.run();
+
+          expect(q.queue.length).to.equal(0);
+        });
+
+        it("run function with a time delay", function(){
+
+          var q = new QueueRunner();
+          var queueItemOptions = {
+            fn: function(){},
+            args: [ q ],
+            timeDelay: 100
+          };
+
+          var queueItem = new q.MakeQueueItem( queueItemOptions );
+          q.queue.push( queueItem );
+          q.run();
+
+          expect(q.queue.length).to.equal(0);
+        });
+
+        it("run function with only a fn", function(){
+
+          var q = new QueueRunner();
+          var queueItemOptions = {
+            fn: function(){}
+          };
+
+          var queueItem = new q.MakeQueueItem( queueItemOptions );
+          q.queue.push( queueItem );
+          q.run();
+
+          expect(q.queue.length).to.equal(0);
+        });
+
+        it("run function with only a fn and args", function(){
+
+          var q = new QueueRunner();
+          var queueItemOptions = {
+            fn: function(){},
+            args: []
+          };
+
+          var queueItem = new q.MakeQueueItem( queueItemOptions );
+          q.queue.push( queueItem );
+          q.run();
+
+          expect(q.queue.length).to.equal(0);
+        });
+
+        it("continue running queue if user requested", function(){
+
+          var q = new QueueRunner();
+          var queueItemOptions = {
+            fn: function(){},
+            args: [ q ],
+            runOnComplete: true
+          };
+
+          var queueItem = new q.MakeQueueItem( queueItemOptions );
+          q.queue.push( queueItem );
+          q.run();
+
           expect(q.queue.length).to.equal(0);
         });
       });
-
-
 
       /*
         it("apples", function(){

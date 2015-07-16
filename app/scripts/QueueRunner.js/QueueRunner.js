@@ -10,7 +10,7 @@
 
   QueueRunner.prototype.MakeQueueItem = function( itemOptions ){
     this.fn = itemOptions.fn || function(){ 
-      console.error('All queue item objects created with makeQueueItem(), need a function for the "fn" key!', 
+      return console.error('All queue item objects created with makeQueueItem(), need a function for the "fn" key!', 
         '\n',
         'The current instance running is: ', this,
         '\n',
@@ -22,6 +22,12 @@
     this.waitForEndOfStack = itemOptions.waitForEndOfStack || false;
     this.timeDelay = itemOptions.timeDelay || undefined;
     return this;
+  };
+  QueueRunner.prototype.waitAndDelay = function( item ){
+    var runItemFn = function( args ){
+        item.fn.apply( this, item.args );
+    };
+    return this.delay( runItemFn, item.timeDelay, item.args );
   };
   QueueRunner.prototype.run = function(){
     var self = this;
@@ -35,15 +41,7 @@
     
     if ( item.waitForEndOfStack === true && item.timeDelay !== undefined ) {
       // run function at end of stack and after a time delay
-      this.delay( function( args ){
-        
-        self.delay( function( args ){
-
-          item.fn.apply( self, item.args );
-
-        }, item.timeDelay, item.args)
-
-      }, 1, item.args );
+      this.waitAndDelay( item );
     }
     else if ( item.waitForEndOfStack === true ){
       // run function at end of stack

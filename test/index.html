@@ -17,6 +17,7 @@
                 'bower_components/sinon-chai/lib/sinon-chai'
             ], function(sinon, sinonChai){
             chai.use(sinonChai);
+            window.sinon = sinon;
             window.sinonChai = sinonChai;
         });
     </script>
