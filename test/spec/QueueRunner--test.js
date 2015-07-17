@@ -42,6 +42,12 @@
         expect(q).to.have.property('delay');
         expect(q).to.not.have.ownProperty('delay');
       });
+
+      it('should inherit the "generateId" method via prototype', function(){
+        var q = new QueueRunner();
+        expect(q).to.have.property('generateId');
+        expect(q).to.not.have.ownProperty('generateId');
+      });
     });
 
     describe("making a queue item with MakeQueueItem()", function(){
@@ -87,6 +93,13 @@
           return ( typeof val === 'number' || typeof val === 'undefined' ); 
         });
       });
+
+      it('should have a property _id', function(){
+        var q = new QueueRunner();
+        var queueItem = q.MakeQueueItem({});
+        expect(q).to.have.property('_id');
+        expect(q._id).to.be.a('number');
+      });
     });
 
     describe("user options", function(){
@@ -117,10 +130,15 @@
           return this;
         };
 
+        // run test
         var queueItem = new q.MakeQueueItem( {} );
         var fn = queueItem.fn.apply( q, queueItem.args );
         expect(fn).to.equal(true);
 
+        // run it the way it would be done normally
+        q = new QueueRunner();
+        queueItem = new q.MakeQueueItem( {} );
+        q.queue.push( queueItem );
         q.run();
       });
 
@@ -294,7 +312,24 @@
         var q = new QueueRunner();
         expect(q.continueQueue).to.equal(q.run);
       });
-      
+
+      it("generateId() will always generate a unique id", function(){
+        var q = new QueueRunner();
+        var id1 = q.generateId('item');
+        var id2 = q.generateId('item');
+
+        expect(id1).to.not.equal(id2);
+      });
+
+      it("multiple queue items to have different id's", function(){
+        var q = new QueueRunner();
+        var queueItem = new q.MakeQueueItem( {} );
+        var queueItem2 = new q.MakeQueueItem( {} );
+        var id1 = queueItem._id;
+        var id2 = queueItem2._id;
+
+        expect(id1).to.not.equal(id2);
+      });
       /*
         it("apples", function(){
 

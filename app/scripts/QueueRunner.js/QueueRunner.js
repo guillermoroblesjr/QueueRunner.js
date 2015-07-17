@@ -8,7 +8,13 @@
     ];
   };
 
-  QueueRunner.prototype.MakeQueueItem = function( itemOptions ){
+  QueueRunner.VERSION = '0.0.1';
+
+  QueueRunner.prototype.ids = {
+    item: 0
+  };
+
+  var MakeQueueItem = QueueRunner.prototype.MakeQueueItem = function( itemOptions ){
     this.fn = itemOptions.fn || function(){ 
       return console.error('All queue item objects created with makeQueueItem(), need a function for the "fn" key!', 
         '\n',
@@ -21,8 +27,20 @@
     this.runOnComplete = itemOptions.runOnComplete || false;
     this.waitForEndOfStack = itemOptions.waitForEndOfStack || false;
     this.timeDelay = itemOptions.timeDelay || undefined;
+    
+    this._id = this.generateId('item');
     return this;
   };
+  MakeQueueItem.prototype = Object.create( QueueRunner.prototype );
+  MakeQueueItem.prototype.constructor = MakeQueueItem;
+
+  var generateId = QueueRunner.prototype.generateId = function( type ){
+    var id = ++this.ids[type];
+    return id;
+  };
+  generateId.prototype = Object.create( QueueRunner.prototype );
+  generateId.prototype.constructor = generateId;
+
   QueueRunner.prototype.waitAndDelay = function( item ){
     var runItemFn = function( args ){
         item.fn.apply( this, item.args );
@@ -62,8 +80,6 @@
   };
   QueueRunner.prototype.continueQueue = QueueRunner.prototype.run;
   QueueRunner.prototype.delay = function( func, wait, args ){
-    args = args || [];
-    wait = wait || 1;
     return setTimeout(function() { func.apply(undefined, args); }, wait);
   };
 
