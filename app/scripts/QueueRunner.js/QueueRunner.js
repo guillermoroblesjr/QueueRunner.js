@@ -8,7 +8,7 @@
     ];
   };
 
-  QueueRunner.VERSION = '0.0.1';
+  QueueRunner.VERSION = 'v0.0.2-alpha';
 
   QueueRunner.prototype.ids = {
     item: 0
