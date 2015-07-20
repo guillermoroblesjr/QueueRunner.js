@@ -8,7 +8,12 @@
     ];
   };
 
-  QueueRunner.VERSION = 'v0.0.2-alpha';
+  // subclass extends superclass
+  QueueRunner.prototype = Object.create( Object.prototype );
+  // set the constructor back to QueueRunner
+  QueueRunner.prototype.constructor = QueueRunner;
+
+  QueueRunner.VERSION = 'v0.0.3-alpha';
 
   QueueRunner.prototype.ids = {
     item: 0
@@ -42,8 +47,9 @@
   generateId.prototype.constructor = generateId;
 
   QueueRunner.prototype.waitAndDelay = function( item ){
+    var self = this;
     var runItemFn = function( args ){
-        item.fn.apply( this, item.args );
+      item.fn.apply( self, item.args );
     };
     return this.delay( runItemFn, item.timeDelay, item.args );
   };
@@ -80,7 +86,8 @@
   };
   QueueRunner.prototype.continueQueue = QueueRunner.prototype.run;
   QueueRunner.prototype.delay = function( func, wait, args ){
-    return setTimeout(function() { func.apply(undefined, args); }, wait);
+    var self = this;
+    return setTimeout(function() { func.apply(self, args); }, wait);
   };
 
   // attach to the window

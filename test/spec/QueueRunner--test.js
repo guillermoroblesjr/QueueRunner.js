@@ -301,6 +301,18 @@
         expect(q.queue[0].id).to.equal(2);
       });
 
+      it('the fn property "this" will be the current QueueRunner instance', function(){
+        var q = new QueueRunner();
+        var queueItem = q.MakeQueueItem({
+          fn: function( q ){
+            expect( this ).to.be( q );
+          },
+          waitForEndOfStack: true,
+          timeDelay: 1,
+          args: [ q ]
+        });
+      });
+
       it("should not throw an error if run() is called with no items in the queue ", function(){
 
         var q = new QueueRunner();
@@ -329,6 +341,14 @@
         var id2 = queueItem2._id;
 
         expect(id1).to.not.equal(id2);
+      });
+
+      it("generateId() to always generate a unique id incremented by 1", function(){
+        var q = new QueueRunner();
+        var id1 = q.generateId('item');
+        var id2 = q.generateId('item');
+
+        expect( id2 ).to.equal( id1 + 1 );
       });
       /*
         it("apples", function(){

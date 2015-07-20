@@ -7,7 +7,7 @@
   var example1 = function(){
     
     var queueRunner1 = new QueueRunner();
-    var fn = function( count, fn, queueRunner1, dbug ){
+    var fn = function( count, fn, dbug ){
 
       var timeDelay = parseInt( Math.random() * 1000 * 2 );
 
@@ -42,7 +42,7 @@
 
       var itemOptions = {
         fn: fn,
-        args: [ count, fn, queueRunner1, dbug ],
+        args: [ count, fn, dbug ],
         runOnComplete: false,
         waitForEndOfStack: false,
         timeDelay: timeDelay
@@ -53,13 +53,13 @@
       };
 
       // continue the next item on the queue
-      queueRunner1.continueQueue();
+      this.continueQueue();
     };
     var count = 0;
     var dbug = new Dbug();
     var itemOptions = {
       fn: fn,
-      args: [ count, fn, queueRunner1, dbug ],
+      args: [ count, fn, dbug ],
       runOnComplete: false,
       waitForEndOfStack: false,
       timeDelay: 800
@@ -77,7 +77,9 @@
   var example2 = function(){
     
     var queueRunner2 = new QueueRunner();
-    var fn = function( count, fn, queueRunner2, dbug ){
+    var fn = function( count, fn, dbug ){
+
+      debugger;
 
       var timeDelay = parseInt( Math.random() * 1000 * 2 );
 
@@ -100,7 +102,7 @@
 
       var itemOptions = {
         fn: fn,
-        args: [ count, fn, queueRunner2, dbug ],
+        args: [ count, fn, dbug ],
         runOnComplete: false,
         waitForEndOfStack: false,
         timeDelay: timeDelay
@@ -111,13 +113,13 @@
       };
 
       // continue the next item on the queue
-      queueRunner2.continueQueue();
+      this.continueQueue();
     };
     var count = 0;
     var dbug = new Dbug();
     var itemOptions = {
       fn: fn,
-      args: [ count, fn, queueRunner2, dbug ],
+      args: [ count, fn, dbug ],
       runOnComplete: false,
       waitForEndOfStack: false,
       timeDelay: 800
