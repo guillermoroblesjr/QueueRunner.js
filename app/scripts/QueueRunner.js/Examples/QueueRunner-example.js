@@ -79,8 +79,6 @@
     var queueRunner2 = new QueueRunner();
     var fn = function( count, fn, dbug ){
 
-      debugger;
-
       var timeDelay = parseInt( Math.random() * 1000 * 2 );
 
       console.groupCollapsed('Example2');
