@@ -9,6 +9,8 @@ of other tasks.
 
 It is also great for creating order with callbacks in asycronous code.
 
+## How it works
+
 The queue is nothing more than an array of objects. Each object contains
 the function to be ran, it's arguments, and options on how to run the
 function. 
@@ -23,13 +25,55 @@ Either run the next function in the queue using this.continueQueue() within
 your current function or when you create a queue item set the ```runOnComplete```
 options to ```true``` to have it ran automatically for you.
 
+## Example
+
 Here's an example from the console showing code being forced to delay
 and be put at the end of the callstack. This allows other code/events
 to happen while at the same time still executing your code in order.
 
 ![Screenshot](https://raw.githubusercontent.com/guillermoroblesjr/QueueRunner.js/master/running-example.PNG)
 
-# How to use
+## How to use
+
+First create a QueueRunner instance, 
+```js
+var queueRunner = new QueueRunner();
+```
+
+All queue items will need to be created by instantiating a new queue item. This is 
+done by using QueueRunner MakeQueueItem() constructor. You will pass in an object 
+with all your options (if any) and with the mandatory function that will be ran in
+the queue.
+```js
+var options = {
+  fn: function(){
+    console.log('hello!');
+  },
+  args: [],
+  runOnComplete: false,
+  waitForEndOfStack: false,
+  timeDelay: 1
+};
+// make a queue item
+var queueItem = new queueRunner.MakeQueueItem( options ); 
+```
+
+You can make as many queue items as you'll need or make more later. You can
+add them dynamically to the queue. Add a queue item by pushing it into the
+queue array.
+```js
+// add it to the queue
+queueRunner.queue.push( queueItem );
+```
+
+Once the queue runner has items in the queue it's ready to run them. Start
+running it by using the ```run``` method.
+```js
+// run the queue
+queueRunner.run();
+```
+
+## Example of passing in arguments & dynamically adding to the queue
 ```js
 // create a QueueRunner instance
 var queueRunner = new QueueRunner();
@@ -57,7 +101,7 @@ var queueItemOptions = {
     // run the queue
     this.continueQueue();
   },
-  args: [ queueRunner, 11 ],
+  args: [ 11 ],
   runOnComplete: false,
   waitForEndOfStack: false,
   timeDelay: 800
@@ -68,4 +112,28 @@ var queueItem = new queueRunner.MakeQueueItem( queueItemOptions );
 queueRunner.queue.push( queueItem );
 // run the queue
 queueRunner.run();
+```
+
+## API
+
+### Making a queue item
+```js
+new QueueRunner.MakeQueueItem({
+  fn: function(){},         // function: the function to be ran in the queue
+  args: [],                 // array: arguments to be passed in to fn
+  runOnComplete: false,     // boolean: run the next function automatically after fn finishes
+  waitForEndOfStack: false, // boolean: wait until the end of the stack before running fn
+  timeDelay: 1              // boolean: wait this amount of time before running fn
+}); 
+```
+
+### Continue running the queue
+Within fn
+```js
+this.continueQueue();
+```
+
+Outside of fn
+```js
+{ runOnComplete: true }
 ```
