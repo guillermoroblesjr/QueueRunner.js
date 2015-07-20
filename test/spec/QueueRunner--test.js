@@ -301,16 +301,19 @@
         expect(q.queue[0].id).to.equal(2);
       });
 
-      it('the fn property "this" will be the current QueueRunner instance', function(){
+      it('the fn property "this" will be the current QueueRunner instance', function(done) {
         var q = new QueueRunner();
-        var queueItem = q.MakeQueueItem({
-          fn: function( q ){
-            expect( this ).to.be( q );
+        var queueItemOptions = {
+          fn: function(q){
+            expect( this ).to.equal( q );
+            done();
           },
-          waitForEndOfStack: true,
-          timeDelay: 1,
-          args: [ q ]
-        });
+          args: [q]
+        };
+
+        var queueItem = new q.MakeQueueItem( queueItemOptions );
+        q.queue.push( queueItem );
+        q.run();
       });
 
       it("should not throw an error if run() is called with no items in the queue ", function(){

@@ -13,7 +13,7 @@
   // set the constructor back to QueueRunner
   QueueRunner.prototype.constructor = QueueRunner;
 
-  QueueRunner.VERSION = 'v0.0.3-alpha';
+  QueueRunner.VERSION = 'v0.0.4-alpha';
 
   QueueRunner.prototype.ids = {
     item: 0
