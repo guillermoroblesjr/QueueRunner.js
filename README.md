@@ -1,6 +1,6 @@
 # QueueRunner.js
 
-Easily force sycronous JavaScript tasks to run asyncronously, or, 
+Easily force syncronous JavaScript tasks to run asyncronously, or, 
 run asyncronous tasks in order without entering callback hell.
 
 This is great for time-consuming tasks that freeze the UI or any code
